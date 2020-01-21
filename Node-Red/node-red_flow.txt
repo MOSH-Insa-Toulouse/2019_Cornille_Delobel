@@ -1,0 +1,224 @@
+[
+    {
+        "id": "aea32805.92de58",
+        "type": "tab",
+        "label": "Flow 6",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "b85fc6ba.279a78",
+        "type": "ttn uplink",
+        "z": "aea32805.92de58",
+        "name": "test_device",
+        "app": "cfcd4b42.dda448",
+        "dev_id": "smart_sensor",
+        "field": "",
+        "x": 250,
+        "y": 260,
+        "wires": [
+            [
+                "6a28fc4f.1d7794",
+                "e090dca9.f5e31"
+            ]
+        ]
+    },
+    {
+        "id": "6a28fc4f.1d7794",
+        "type": "debug",
+        "z": "aea32805.92de58",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 470,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e090dca9.f5e31",
+        "type": "function",
+        "z": "aea32805.92de58",
+        "name": "dec to ascii",
+        "func": "msg.payload = Buffer.from(msg.payload);\nmsg.payload = msg.payload.toString();\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 440,
+        "y": 360,
+        "wires": [
+            [
+                "f35e5973.0dbb58",
+                "9b29b399.5f911",
+                "50404884.6dbbb8",
+                "e1f79586.8ae788",
+                "adbe30f3.88bfd"
+            ]
+        ]
+    },
+    {
+        "id": "f35e5973.0dbb58",
+        "type": "debug",
+        "z": "aea32805.92de58",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "9b29b399.5f911",
+        "type": "ui_text",
+        "z": "aea32805.92de58",
+        "group": "528cf4c5.a4e9dc",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "Disp value",
+        "label": "Gas sensor value",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 640,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "50404884.6dbbb8",
+        "type": "ui_chart",
+        "z": "aea32805.92de58",
+        "name": "value_chart",
+        "group": "528cf4c5.a4e9dc",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": true,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "outputs": 1,
+        "x": 640,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e1f79586.8ae788",
+        "type": "ui_gauge",
+        "z": "aea32805.92de58",
+        "name": "color_gauge_value",
+        "group": "528cf4c5.a4e9dc",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "40",
+        "seg2": "70",
+        "x": 680,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "ff262600.b5e7e8",
+        "type": "ui_toast",
+        "z": "aea32805.92de58",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "topic": "Caution : dangerous gas concentration anormally high",
+        "name": "Caution",
+        "x": 640,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "adbe30f3.88bfd",
+        "type": "function",
+        "z": "aea32805.92de58",
+        "name": "caution",
+        "func": "//get stored values if present\nvar count1 = context.get(\"count1\");\n\nif (Number(msg.payload) > 50.0){\n    value = msg.payload;\n    msg.payload = \"The gas value is : \" + value;\n    return msg;\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 490,
+        "y": 660,
+        "wires": [
+            [
+                "ff262600.b5e7e8"
+            ]
+        ]
+    },
+    {
+        "id": "cfcd4b42.dda448",
+        "type": "ttn app",
+        "z": "",
+        "appId": "smart_sensor_iss",
+        "accessKey": "ttn-account-v2.kylElRNgqrtHIRtNN2svfSU9TEpREWsMI-J2G2g4cbU",
+        "discovery": "discovery.thethingsnetwork.org:1900"
+    },
+    {
+        "id": "528cf4c5.a4e9dc",
+        "type": "ui_group",
+        "z": "",
+        "name": "Smart_Sensor",
+        "tab": "88be0741.821e18",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "88be0741.821e18",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
